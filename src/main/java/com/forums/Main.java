@@ -12,7 +12,6 @@ import java.util.List;
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) throws IOException {
-        Helper helper = new Helper();
         String url = "https://www.otosaigon.com/threads/ket-qua-thu-nghiem-mot-so-loai-film-cach-nhiet-08-2008-de-nghi-khong-mua-ban-quang-cao-o-bai-nay.1164815/page-2";
         OtoSaigonCrawler crawler = new OtoSaigonCrawler();
         List<Comment> list = crawler.getListComments(url);
