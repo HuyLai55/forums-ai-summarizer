@@ -2,7 +2,7 @@ package com.forums;
 
 
 import com.forums.comment.Comment;
-import com.forums.crawler.OtoSaigonCrawler;
+import com.forums.crawler.TinhTeCrawler;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.IOException;
@@ -12,9 +12,9 @@ import java.util.List;
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) throws IOException {
-        String url = "https://www.otosaigon.com/threads/ket-qua-thu-nghiem-mot-so-loai-film-cach-nhiet-08-2008-de-nghi-khong-mua-ban-quang-cao-o-bai-nay.1164815/page-2";
-        OtoSaigonCrawler crawler = new OtoSaigonCrawler();
-        List<Comment> list = crawler.getListComments(url);
+        String url = "https://tinhte.vn/thread/minh-nang-cap-goc-lam-viec-voi-ban-nang-ha-di-dong.3748105";
+        TinhTeCrawler tinhTeCrawler = new TinhTeCrawler();
+        List<Comment> list = tinhTeCrawler.getListComments(url, url);
 
         PrintStream out = new PrintStream(System.out, true, "UTF-8");
         for(Comment comment : list) {
@@ -24,6 +24,7 @@ public class Main {
             out.println(comment.comment);
             out.println(comment.created);
         }
+
 
     }
 }

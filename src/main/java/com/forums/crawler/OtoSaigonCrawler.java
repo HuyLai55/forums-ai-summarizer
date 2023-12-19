@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class OtoSaigonCrawler {
-
     public List<Comment> getListComments(String url) throws IOException {
         List<Comment> listComments = new ArrayList<>();
         listComments.addAll(crawOnePageOnly(url));
@@ -54,20 +53,16 @@ public class OtoSaigonCrawler {
 
         Elements elmCommentInfo = document.getElementsByClass("message message--post  js-post js-inlineModContainer  ");
         for (int i = 0; i < elmCommentInfo.size(); i++) {
-            String userName = null;
-            String userTitle = null;
-            LocalDateTime dateCreated = null;
-            String comment = null;
             Elements elmUsers = elmCommentInfo.get(i).getElementsByClass("message-name");
-            userName = elmUsers.text();
-            userTitle = elmCommentInfo.get(i).getElementsByClass("userTitle message-userTitle").text();
+            String userName = elmUsers.text();
+            String userTitle = elmCommentInfo.get(i).getElementsByClass("userTitle message-userTitle").text();
 
             Elements elmDates = elmCommentInfo.get(i).getElementsByClass("u-dt");
             String dateCreatedToString = elmDates.attr("datetime");
-            dateCreated = convertStringToDateTime(dateCreatedToString);
+            LocalDateTime dateCreated = convertStringToDateTime(dateCreatedToString);
 
             Elements elmComments = elmCommentInfo.get(i).getElementsByClass("bbWrapper");
-            comment = extractString(elmComments.html());
+            String comment = extractString(elmComments.html());
 
             Comment commentInfo = new Comment(userName, userTitle, comment, dateCreated);
             listComments.add(commentInfo);
