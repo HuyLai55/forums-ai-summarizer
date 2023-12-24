@@ -1,10 +1,12 @@
 package com.forums.crawler;
 
 import com.forums.comment.Comment;
+import com.forums.comment.CommentRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -13,7 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class OtoSaigonCrawler {
+    CommentRepo commentRepo;
+
     public List<Comment> getListComments(String url) throws IOException {
         List<Comment> listComments = new ArrayList<>();
         listComments.addAll(crawOnePageOnly(url));
@@ -65,6 +70,7 @@ public class OtoSaigonCrawler {
             String comment = extractString(elmComments.html());
 
             Comment commentInfo = new Comment(userName, userTitle, comment, dateCreated);
+            commentRepo.save(commentInfo);
             listComments.add(commentInfo);
         }
         return listComments;
