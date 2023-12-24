@@ -3,31 +3,17 @@ server:
   url: localhost
   pageUrl: http://localhost:8081/forum_crawler
 
-jdbc:
-  dbhost: localhost
-  slave: localhost
-  dbname: forum_crawler
-  username: root
-  password: root
-  maxPoolSize: 3
-
 spring:
   jpa:
-    open-in-view: false
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  liquibase:
-    change-log: classpath:liquibase/changelog-master.xml
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:src/main/resources/forum-comment.db
 
 
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
+hibernate:
+  show_sqlL: true
+  hbm2ddl:
+    auto: create-drop

@@ -1,11 +1,12 @@
-package com.forums.crawler;
+package com.forum.crawler;
 
-import com.forums.comment.Comment;
-import com.forums.comment.CommentRepo;
+import com.forum.comment.Comment;
+import com.forum.comment.CommentRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Component
 public class OtoSaigonCrawler {
+    @Autowired
     CommentRepo commentRepo;
 
     public List<Comment> getListComments(String url) throws IOException {

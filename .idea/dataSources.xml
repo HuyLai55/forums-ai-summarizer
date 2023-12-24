@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="summarizer.sqlite" uuid="b20cda57-421a-4205-97f0-3b4bf91f8910">
+    <data-source source="LOCAL" name="forum-comment" uuid="4a8d5946-275b-44eb-b9d9-6f65c48f5507">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:ai-summarizer.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:D:\IdeaProjects\forums-ai-summarizer\src\main\resources\forum-comment.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.43.0/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar</url>
+        </library>
+      </libraries>
     </data-source>
   </component>
 </project>

@@ -1,4 +1,4 @@
-package com.forums.thread;
+package com.forum.thread;
 
 import jakarta.persistence.*;
 

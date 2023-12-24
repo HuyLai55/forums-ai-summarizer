@@ -1,21 +1,26 @@
-package com.forums.crawler;
+package com.forum.crawler;
 
-import com.forums.comment.Comment;
-import com.forums.comment.CommentRepo;
-import com.forums.thread.Thread;
-import com.forums.thread.ThreadRepo;
+import com.forum.comment.Comment;
+import com.forum.comment.CommentRepo;
+import com.forum.thread.Thread;
+import com.forum.thread.ThreadRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Component
 public class TinhTeCrawler {
+    @Autowired
     CommentRepo commentRepo;
+    @Autowired
     ThreadRepo threadRepo;
 
     public List<Comment> getListComments(String url, String urlPage1) throws IOException {

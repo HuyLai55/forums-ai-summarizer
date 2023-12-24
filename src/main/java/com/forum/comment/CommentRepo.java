@@ -1,4 +1,4 @@
-package com.forums.comment;
+package com.forum.comment;
 
 import org.springframework.data.repository.CrudRepository;
 
