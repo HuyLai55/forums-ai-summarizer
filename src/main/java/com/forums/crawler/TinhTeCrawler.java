@@ -1,6 +1,9 @@
 package com.forums.crawler;
 
 import com.forums.comment.Comment;
+import com.forums.comment.CommentRepo;
+import com.forums.thread.Thread;
+import com.forums.thread.ThreadRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +15,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class TinhTeCrawler {
+    CommentRepo commentRepo;
+    ThreadRepo threadRepo;
+
     public List<Comment> getListComments(String url, String urlPage1) throws IOException {
         List<Comment> commentList = new ArrayList<>();
         commentList.addAll(crawOnePageOnly(url));
@@ -30,6 +36,9 @@ public class TinhTeCrawler {
     Optional<String> extractNextUrl(String url, String urlPage1) throws IOException {
         Document document = Jsoup.connect(url).get();
         Elements currentPageByClass = document.getElementsByClass("jsx-2305813501 page current");
+        if (currentPageByClass.size() == 0) {
+            return Optional.empty();
+        }
         Element currentPage = currentPageByClass.get(0);
         String currentPageInText = currentPage.text();
         Integer currentPageInInt = Integer.valueOf(currentPageInText);
@@ -51,9 +60,16 @@ public class TinhTeCrawler {
     private List<Comment> crawOnePageOnly(String url) throws IOException {
         List<Comment> listComments = new ArrayList<>();
         Document document = Jsoup.connect(url).get();
-        Elements elmCommentInfo = document.getElementsByClass("jsx-691990575 thread-comment__box   ");
+
+        String threadUserName = document.getElementsByClass("jsx-89440 author-name").select("a").text();
+        System.out.println("thread user name: " + threadUserName);
+        String threadTitle = document.getElementsByClass("jsx-89440 thread-title").text();
+        System.out.println("thread title: " + threadTitle);
         LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text());
-        System.out.println("date created: " + dateTimeThread);
+        System.out.println("date thread: " + dateTimeThread);
+        Thread thread = new Thread(threadUserName, threadTitle, dateTimeThread);
+
+        Elements elmCommentInfo = document.getElementsByClass("jsx-691990575 thread-comment__box   ");
 
         for (int i = 0; i < elmCommentInfo.size(); i++) {
             if (elmCommentInfo.size() == 0) {
@@ -71,8 +87,11 @@ public class TinhTeCrawler {
             String comment = elmComments.text();
 
             Comment commentInfo = new Comment(userName, userTitle, comment, dateCreated);
+            commentRepo.save(commentInfo);
             listComments.add(commentInfo);
         }
+        threadRepo.save(thread);
+
         return listComments;
     }
 

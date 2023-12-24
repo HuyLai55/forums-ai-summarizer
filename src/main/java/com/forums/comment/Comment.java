@@ -1,13 +1,28 @@
 package com.forums.comment;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "forum_comment")
 public class Comment {
-    public Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
+    public Long commentId;
+
+    @Column(name = "user_name")
     public String userName;
+
+    @Column(name = "user_title")
     public String userTitle;
+
+    @Column(name = "comment")
     public String comment;
-    public LocalDateTime created;
+
+    @Column(name = "created_at")
+    public LocalDateTime createdAt;
 
     public Comment() {
 
@@ -17,7 +32,7 @@ public class Comment {
         this.userName = userName;
         this.userTitle = userTitle;
         this.comment = comment;
-        this.created = created;
+        this.createdAt = created;
     }
 
 }
