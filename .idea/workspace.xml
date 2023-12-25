@@ -4,25 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0dc179a0-6d30-4e8a-85ce-8cc1ee92006e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/config/DbConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/forum-comment.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="0dc179a0-6d30-4e8a-85ce-8cc1ee92006e" name="Changes" comment="crawl comment in voz forum and fix save data">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources/4a8d5946-275b-44eb-b9d9-6f65c48f5507.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/api/Crawler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/VozCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forums/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forums/comment/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/Comment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forums/comment/CommentRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/CommentRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forums/config/DataConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forums/crawler/OtoSaigonCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/OtoSaigonCrawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forums/crawler/TinhTeCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/TinhTeCrawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forums/thread/Thread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/Thread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forums/thread/ThreadRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/ThreadRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/comment/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/comment/CommentRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/CommentRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/OtoSaigonCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/OtoSaigonCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/TinhTeCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/TinhTeCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/thread/Thread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/Thread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/thread/ThreadRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/ThreadRepo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/forum-comment.db" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/forum-comment.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -185,8 +182,19 @@
       <workItem from="1703342326439" duration="4872000" />
       <workItem from="1703373103489" duration="1201000" />
       <workItem from="1703408047828" duration="7163000" />
-      <workItem from="1703424987840" duration="4134000" />
+      <workItem from="1703424987840" duration="5471000" />
+      <workItem from="1703460522215" duration="1681000" />
+      <workItem from="1703475718440" duration="1124000" />
+      <workItem from="1703488523482" duration="18019000" />
     </task>
+    <task id="LOCAL-00001" summary="config for sqlite">
+      <created>1703430016954</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1703430016954</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -202,5 +210,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="config for sqlite" />
+    <MESSAGE value="crawl comment in voz forum and fix save data" />
+    <option name="LAST_COMMIT_MESSAGE" value="crawl comment in voz forum and fix save data" />
   </component>
 </project>

@@ -24,15 +24,33 @@ public class TinhTeCrawler {
     ThreadRepo threadRepo;
 
     public List<Comment> getListComments(String url, String urlPage1) throws IOException {
+        Thread infoThreadInWeb = getInfoThread(url);
+        Thread thread = threadRepo.findOne(ThreadRepo.Spec.byUserAndTitle(infoThreadInWeb.userName, infoThreadInWeb.title)).orElse(null);
+        List<Comment> commentIsSaved;
+        int sizeOfCommentIsSaved = 0;
+        if(thread != null) {
+            commentIsSaved = commentRepo.findAll(CommentRepo.Spec.byThreadId(thread.threadId));
+            sizeOfCommentIsSaved = commentIsSaved.size();
+        }
+
         List<Comment> commentList = new ArrayList<>();
-        commentList.addAll(crawOnePageOnly(url));
+        if(thread == null) {
+            thread = threadRepo.save(infoThreadInWeb);
+        }
+        commentList.addAll(crawOnePageOnly(url, thread.threadId));
         Optional<String> nextPage = extractNextUrl(url, urlPage1);
         while (nextPage.isPresent()) {
             url = nextPage.get();
             System.out.println("crawling of url " + url);
-            commentList.addAll(crawOnePageOnly(url)); //crawling next Page
+            commentList.addAll(crawOnePageOnly(url, thread.threadId)); //crawling next Page
             nextPage = extractNextUrl(url, urlPage1);
             System.out.println("size of comment " + commentList.size());
+        }
+        int amountNewComment = commentList.size() - sizeOfCommentIsSaved;
+        if(amountNewComment > 0) {
+            for(int i = 0; i < amountNewComment; i++) {
+                commentRepo.save(commentList.get(sizeOfCommentIsSaved+i));
+            }
         }
 
         return commentList;
@@ -62,20 +80,25 @@ public class TinhTeCrawler {
         return Optional.empty();
     }
 
-    private List<Comment> crawOnePageOnly(String url) throws IOException {
-        List<Comment> listComments = new ArrayList<>();
+    private Thread getInfoThread(String url) throws IOException{
         Document document = Jsoup.connect(url).get();
-
         String threadUserName = document.getElementsByClass("jsx-89440 author-name").select("a").text();
         System.out.println("thread user name: " + threadUserName);
         String threadTitle = document.getElementsByClass("jsx-89440 thread-title").text();
         System.out.println("thread title: " + threadTitle);
         LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text());
         System.out.println("date thread: " + dateTimeThread);
-        Thread thread = new Thread(threadUserName, threadTitle, dateTimeThread);
 
+        return new Thread(threadUserName, threadTitle, dateTimeThread);
+    }
+
+    private List<Comment> crawOnePageOnly(String url, Long threadId) throws IOException {
+        List<Comment> listComments = new ArrayList<>();
+        Document document = Jsoup.connect(url).get();
+
+        LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text());
+        System.out.println("date thread: " + dateTimeThread);
         Elements elmCommentInfo = document.getElementsByClass("jsx-691990575 thread-comment__box   ");
-
         for (int i = 0; i < elmCommentInfo.size(); i++) {
             if (elmCommentInfo.size() == 0) {
                 throw new FileNotFoundException("thread have not comment");
@@ -91,11 +114,9 @@ public class TinhTeCrawler {
             Elements elmComments = elmCommentInfo.get(i).getElementsByClass("xf-body-paragraph");
             String comment = elmComments.text();
 
-            Comment commentInfo = new Comment(userName, userTitle, comment, dateCreated);
-            commentRepo.save(commentInfo);
+            Comment commentInfo = new Comment(threadId, userName, userTitle, comment, dateCreated);
             listComments.add(commentInfo);
         }
-        threadRepo.save(thread);
 
         return listComments;
     }

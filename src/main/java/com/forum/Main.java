@@ -2,17 +2,14 @@ package com.forum;
 
 
 import com.forum.comment.Comment;
+import com.forum.crawler.OtoSaigonCrawler;
 import com.forum.crawler.TinhTeCrawler;
-import org.apache.catalina.core.ApplicationContext;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.forum.crawler.VozCrawler;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.PrintStream;
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.List;
 
 
@@ -24,10 +21,10 @@ public class Main {
     public static void main(String[] args) throws Exception {
         ConfigurableApplicationContext context =  SpringApplication.run(Main.class, args);
 
-        String url = "https://tinhte.vn/thread/minh-nang-cap-goc-lam-viec-voi-ban-nang-ha-di-dong.3748105";
+        String url = "https://voz.vn/t/nho-ae-tu-van-con-tv-65inch-best-p-p-thoi-diem-hien-tai.878335/";
 
-        TinhTeCrawler tinhTeCrawler = context.getBean(TinhTeCrawler.class);
-        List<Comment> list = tinhTeCrawler.getListComments(url, url);
+        VozCrawler vozCrawler = context.getBean(VozCrawler.class);
+        List<Comment> list = vozCrawler.getListComments(url);
 
         PrintStream out = new PrintStream(System.out, true, "UTF-8");
         for (Comment comment : list) {

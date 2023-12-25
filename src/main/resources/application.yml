@@ -17,3 +17,5 @@ hibernate:
   show_sqlL: true
   hbm2ddl:
     auto: create-drop
+
+user-agent: Mozilla

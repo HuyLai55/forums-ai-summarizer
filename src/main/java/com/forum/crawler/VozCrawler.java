@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class OtoSaigonCrawler {
+public class VozCrawler {
     @Autowired
     ThreadRepo threadRepo;
     @Autowired
     CommentRepo commentRepo;
+    @Value("${user-agent}")
+    String userAgent;
 
     public List<Comment> getListComments(String url) throws IOException {
         Thread infoThreadInWeb = getInfoThread(url);
@@ -60,15 +62,22 @@ public class OtoSaigonCrawler {
     }
 
     private Thread getInfoThread(String url) throws IOException{
-        Document document = Jsoup.connect(url).get();
+        Document document = Jsoup.connect(url).userAgent(userAgent).get();
+        String threadUserName = document.getElementsByClass("username  u-concealed").text();
+        System.out.println("thread user name: " + threadUserName);
         String threadTitle = document.getElementsByClass("p-title-value").text();
-        return new Thread(threadTitle);
+        System.out.println("thread title: " + threadTitle);
+        LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("listInline listInline--bullet")
+                .select("li").select("a").select("time.u-dt").attr("datetime"));
+        System.out.println("date thread: " + dateTimeThread);
+
+        return new Thread(threadUserName, threadTitle, dateTimeThread);
     }
 
     private Optional<String> extractNextUrl(String url) throws IOException {
-        Document document = Jsoup.connect(url).get();
+        Document document = Jsoup.connect(url).userAgent(userAgent).get();
 
-        Elements nextPage = document.getElementsByClass("pageNav-jump--next");
+        Elements nextPage = document.getElementsByClass("pageNav-jump pageNav-jump--next");
 
         if (nextPage.size() > 0) {
             return Optional.of(nextPage.get(0).absUrl("href"));
@@ -80,18 +89,19 @@ public class OtoSaigonCrawler {
     // lấy tất cả comments
     private List<Comment> crawOnePageOnly(String url, Long threadId) throws IOException {
         List<Comment> listComments = new ArrayList<>();
-        Document document = Jsoup.connect(url).get();
+        Document document = Jsoup.connect(url).userAgent(userAgent).get();
         document.outputSettings().prettyPrint(false);
         document.select("br").before("\\n");
         document.select("p").before("\\n");
 
-        Elements elmCommentInfo = document.getElementsByClass("message message--post  js-post js-inlineModContainer  ");
+        Elements elmCommentInfo = document.getElementsByClass("message message--post js-post js-inlineModContainer  ");
         for (int i = 0; i < elmCommentInfo.size(); i++) {
             Elements elmUsers = elmCommentInfo.get(i).getElementsByClass("message-name");
             String userName = elmUsers.text();
             String userTitle = elmCommentInfo.get(i).getElementsByClass("userTitle message-userTitle").text();
 
-            Elements elmDates = elmCommentInfo.get(i).getElementsByClass("u-dt");
+            Elements elmDates = elmCommentInfo.get(i).getElementsByClass("message-attribution-main listInline ")
+                    .select("li.u-concealed").select("a").select("time.u-dt");
             String dateCreatedToString = elmDates.attr("datetime");
             LocalDateTime dateCreated = convertStringToDateTime(dateCreatedToString);
 
@@ -123,4 +133,3 @@ public class OtoSaigonCrawler {
         return strWithNewLines;
     }
 }
-

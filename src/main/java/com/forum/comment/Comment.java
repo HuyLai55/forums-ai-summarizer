@@ -1,6 +1,7 @@
 package com.forum.comment;
 
 import jakarta.persistence.*;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     public Long commentId;
+
+    @Column(name = "thread_id")
+    public Long threadId;
 
     @Column(name = "user_name")
     public String userName;
@@ -28,7 +32,8 @@ public class Comment {
 
     }
 
-    public Comment(String userName, String userTitle, String comment, LocalDateTime created) {
+    public Comment(Long threadId, String userName, String userTitle, String comment, LocalDateTime created) {
+        this.threadId = threadId;
         this.userName = userName;
         this.userTitle = userTitle;
         this.comment = comment;
