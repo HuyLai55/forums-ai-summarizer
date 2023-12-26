@@ -1,7 +1,6 @@
 package com.forum.comment;
 
 import jakarta.persistence.*;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalDateTime;
 
@@ -38,6 +37,10 @@ public class Comment {
         this.userTitle = userTitle;
         this.comment = comment;
         this.createdAt = created;
+    }
+
+    public enum SourceType {
+        oToSaiGon, tinhTe, voz
     }
 
 }

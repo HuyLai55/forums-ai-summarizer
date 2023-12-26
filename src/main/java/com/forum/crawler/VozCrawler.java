@@ -33,43 +33,38 @@ public class VozCrawler {
         Thread thread = threadRepo.findOne(ThreadRepo.Spec.byUserAndTitle(infoThreadInWeb.userName, infoThreadInWeb.title)).orElse(null);
         List<Comment> commentIsSaved;
         int sizeOfCommentIsSaved = 0;
-        if(thread != null) {
+        if (thread != null) {
             commentIsSaved = commentRepo.findAll(CommentRepo.Spec.byThreadId(thread.threadId));
             sizeOfCommentIsSaved = commentIsSaved.size();
         }
 
         List<Comment> commentList = new ArrayList<>();
-        if(thread == null) {
+        if (thread == null) {
             thread = threadRepo.save(infoThreadInWeb);
         }
         commentList.addAll(crawOnePageOnly(url, thread.threadId));
         Optional<String> nextPage = extractNextUrl(url);
         while (nextPage.isPresent()) {
             url = nextPage.get();
-            System.out.println("crawling of url " + url);
             commentList.addAll(crawOnePageOnly(url, thread.threadId)); //crawling next Page
             nextPage = extractNextUrl(url);
-            System.out.println("size of comment " + commentList.size());
         }
         int amountNewComment = commentList.size() - sizeOfCommentIsSaved;
-        if(amountNewComment > 0) {
-            for(int i = 0; i < amountNewComment; i++) {
-                commentRepo.save(commentList.get(sizeOfCommentIsSaved+i));
+        if (amountNewComment > 0) {
+            for (int i = 0; i < amountNewComment; i++) {
+                commentRepo.save(commentList.get(sizeOfCommentIsSaved + i));
             }
         }
 
         return commentList;
     }
 
-    private Thread getInfoThread(String url) throws IOException{
+    private Thread getInfoThread(String url) throws IOException {
         Document document = Jsoup.connect(url).userAgent(userAgent).get();
         String threadUserName = document.getElementsByClass("username  u-concealed").text();
-        System.out.println("thread user name: " + threadUserName);
         String threadTitle = document.getElementsByClass("p-title-value").text();
-        System.out.println("thread title: " + threadTitle);
         LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("listInline listInline--bullet")
                 .select("li").select("a").select("time.u-dt").attr("datetime"));
-        System.out.println("date thread: " + dateTimeThread);
 
         return new Thread(threadUserName, threadTitle, dateTimeThread);
     }
@@ -108,7 +103,7 @@ public class VozCrawler {
             Elements elmComments = elmCommentInfo.get(i).getElementsByClass("bbWrapper");
             String comment = extractString(elmComments.text());
 
-            Comment commentInfo = new Comment(threadId,userName, userTitle, comment, dateCreated);
+            Comment commentInfo = new Comment(threadId, userName, userTitle, comment, dateCreated);
             listComments.add(commentInfo);
         }
         return listComments;

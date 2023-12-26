@@ -28,28 +28,26 @@ public class TinhTeCrawler {
         Thread thread = threadRepo.findOne(ThreadRepo.Spec.byUserAndTitle(infoThreadInWeb.userName, infoThreadInWeb.title)).orElse(null);
         List<Comment> commentIsSaved;
         int sizeOfCommentIsSaved = 0;
-        if(thread != null) {
+        if (thread != null) {
             commentIsSaved = commentRepo.findAll(CommentRepo.Spec.byThreadId(thread.threadId));
             sizeOfCommentIsSaved = commentIsSaved.size();
         }
 
         List<Comment> commentList = new ArrayList<>();
-        if(thread == null) {
+        if (thread == null) {
             thread = threadRepo.save(infoThreadInWeb);
         }
         commentList.addAll(crawOnePageOnly(url, thread.threadId));
         Optional<String> nextPage = extractNextUrl(url, urlPage1);
         while (nextPage.isPresent()) {
             url = nextPage.get();
-            System.out.println("crawling of url " + url);
             commentList.addAll(crawOnePageOnly(url, thread.threadId)); //crawling next Page
             nextPage = extractNextUrl(url, urlPage1);
-            System.out.println("size of comment " + commentList.size());
         }
         int amountNewComment = commentList.size() - sizeOfCommentIsSaved;
-        if(amountNewComment > 0) {
-            for(int i = 0; i < amountNewComment; i++) {
-                commentRepo.save(commentList.get(sizeOfCommentIsSaved+i));
+        if (amountNewComment > 0) {
+            for (int i = 0; i < amountNewComment; i++) {
+                commentRepo.save(commentList.get(sizeOfCommentIsSaved + i));
             }
         }
 
@@ -65,12 +63,10 @@ public class TinhTeCrawler {
         Element currentPage = currentPageByClass.get(0);
         String currentPageInText = currentPage.text();
         Integer currentPageInInt = Integer.valueOf(currentPageInText);
-        System.out.println("current Page: " + currentPageInInt);
         Elements pageDifPageInBottom = document.getElementsByClass("jsx-2305813501 page ");
 
         for (int i = 0; i < pageDifPageInBottom.size() / 2; i++) {
             String pageDifInText = pageDifPageInBottom.get(i).text();
-            System.out.println("dif page: " + pageDifInText);
             Integer nextPageInInt = Integer.valueOf(pageDifInText);
             if (nextPageInInt == currentPageInInt + 1) {
                 return Optional.of(urlPage1 + "/page-" + nextPageInInt);
@@ -80,14 +76,11 @@ public class TinhTeCrawler {
         return Optional.empty();
     }
 
-    private Thread getInfoThread(String url) throws IOException{
+    private Thread getInfoThread(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
         String threadUserName = document.getElementsByClass("jsx-89440 author-name").select("a").text();
-        System.out.println("thread user name: " + threadUserName);
         String threadTitle = document.getElementsByClass("jsx-89440 thread-title").text();
-        System.out.println("thread title: " + threadTitle);
         LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text());
-        System.out.println("date thread: " + dateTimeThread);
 
         return new Thread(threadUserName, threadTitle, dateTimeThread);
     }
@@ -97,7 +90,6 @@ public class TinhTeCrawler {
         Document document = Jsoup.connect(url).get();
 
         LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text());
-        System.out.println("date thread: " + dateTimeThread);
         Elements elmCommentInfo = document.getElementsByClass("jsx-691990575 thread-comment__box   ");
         for (int i = 0; i < elmCommentInfo.size(); i++) {
             if (elmCommentInfo.size() == 0) {

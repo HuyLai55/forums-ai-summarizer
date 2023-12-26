@@ -1,7 +1,7 @@
 server:
   port: 8081
   url: localhost
-  pageUrl: http://localhost:8081/forum_crawler
+  pageUrl: http://localhost:8081
 
 spring:
   jpa:
@@ -18,4 +18,4 @@ hibernate:
   hbm2ddl:
     auto: create-drop
 
-user-agent: Mozilla
+user-agent: Chrome

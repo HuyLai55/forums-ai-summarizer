@@ -1,7 +1,6 @@
 package com.forum.thread;
 
 import jakarta.persistence.*;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +21,8 @@ public class Thread {
     @Column(name = "created_At")
     public LocalDateTime createdAt;
 
-    public Thread(){}
+    public Thread() {
+    }
 
     public Thread(String title) {
         this.title = title;

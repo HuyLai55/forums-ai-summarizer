@@ -9,7 +9,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -31,35 +30,33 @@ public class OtoSaigonCrawler {
         Thread thread = threadRepo.findOne(ThreadRepo.Spec.byUserAndTitle(infoThreadInWeb.userName, infoThreadInWeb.title)).orElse(null);
         List<Comment> commentIsSaved;
         int sizeOfCommentIsSaved = 0;
-        if(thread != null) {
+        if (thread != null) {
             commentIsSaved = commentRepo.findAll(CommentRepo.Spec.byThreadId(thread.threadId));
             sizeOfCommentIsSaved = commentIsSaved.size();
         }
 
         List<Comment> commentList = new ArrayList<>();
-        if(thread == null) {
+        if (thread == null) {
             thread = threadRepo.save(infoThreadInWeb);
         }
         commentList.addAll(crawOnePageOnly(url, thread.threadId));
         Optional<String> nextPage = extractNextUrl(url);
         while (nextPage.isPresent()) {
             url = nextPage.get();
-            System.out.println("crawling of url " + url);
             commentList.addAll(crawOnePageOnly(url, thread.threadId)); //crawling next Page
             nextPage = extractNextUrl(url);
-            System.out.println("size of comment " + commentList.size());
         }
         int amountNewComment = commentList.size() - sizeOfCommentIsSaved;
-        if(amountNewComment > 0) {
-            for(int i = 0; i < amountNewComment; i++) {
-                commentRepo.save(commentList.get(sizeOfCommentIsSaved+i));
+        if (amountNewComment > 0) {
+            for (int i = 0; i < amountNewComment; i++) {
+                commentRepo.save(commentList.get(sizeOfCommentIsSaved + i));
             }
         }
 
         return commentList;
     }
 
-    private Thread getInfoThread(String url) throws IOException{
+    private Thread getInfoThread(String url) throws IOException {
         Document document = Jsoup.connect(url).get();
         String threadTitle = document.getElementsByClass("p-title-value").text();
         return new Thread(threadTitle);
@@ -98,7 +95,7 @@ public class OtoSaigonCrawler {
             Elements elmComments = elmCommentInfo.get(i).getElementsByClass("bbWrapper");
             String comment = extractString(elmComments.text());
 
-            Comment commentInfo = new Comment(threadId,userName, userTitle, comment, dateCreated);
+            Comment commentInfo = new Comment(threadId, userName, userTitle, comment, dateCreated);
             listComments.add(commentInfo);
         }
         return listComments;

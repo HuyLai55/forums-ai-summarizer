@@ -5,19 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0dc179a0-6d30-4e8a-85ce-8cc1ee92006e" name="Changes" comment="crawl comment in voz forum and fix save data">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/4a8d5946-275b-44eb-b9d9-6f65c48f5507.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/api/Crawler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/VozCrawler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/http/crawler.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/api/Crawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/api/Crawler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/comment/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/Comment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/comment/CommentRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/CommentRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/config/DbConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/config/DbConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/OtoSaigonCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/OtoSaigonCrawler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/TinhTeCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/TinhTeCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/VozCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/VozCrawler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/thread/Thread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/Thread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/thread/ThreadRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/ThreadRepo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/forum-comment.db" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/forum-comment.db" afterDir="false" />
     </list>
@@ -71,38 +69,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;corretto-1.8&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/IdeaProjects/ecademy-server&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;8e01977ec58e9d15fb957f363426d4db&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "jdk.selected.JAVA_MODULE": "corretto-1.8",
+    "last_opened_file_path": "D:/IdeaProjects/forums-ai-summarizer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "spring.configuration.checksum": "8e01977ec58e9d15fb957f363426d4db",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;sqlite&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "sqlite"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\IdeaProjects\forums-ai-summarizer\src\main\java\com\forum" />
       <recent name="D:\IdeaProjects\forums-ai-summarizer\src\main\resources" />
       <recent name="D:\IdeaProjects\forums-ai-summarizer\src\main\java\com\forums" />
       <recent name="D:\IdeaProjects\forum-crawler\src\main\resources" />
@@ -124,7 +123,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Main" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <configuration name="crawler | #2" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$PROJECT_DIR$/http/crawler.http" index="2" requestIdentifier="#2" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="3" requestIdentifier="#3" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="Main" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="ALTERNATIVE_JRE_PATH" value="semeru-18" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <module name="forum-crawler.main" />
@@ -135,6 +140,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.generated-requests | #3" />
+        <item itemvalue="HTTP Request.crawler | #2" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -185,7 +192,11 @@
       <workItem from="1703424987840" duration="5471000" />
       <workItem from="1703460522215" duration="1681000" />
       <workItem from="1703475718440" duration="1124000" />
-      <workItem from="1703488523482" duration="18019000" />
+      <workItem from="1703488523482" duration="19051000" />
+      <workItem from="1703547030563" duration="7491000" />
+      <workItem from="1703574655983" duration="41000" />
+      <workItem from="1703575382512" duration="5170000" />
+      <workItem from="1703580669084" duration="3608000" />
     </task>
     <task id="LOCAL-00001" summary="config for sqlite">
       <created>1703430016954</created>

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaRepositories({"com.forum"})
-@ComponentScan(basePackages = { "com.forum" })
+@ComponentScan(basePackages = {"com.forum"})
 public class DbConfig {
 
 }
