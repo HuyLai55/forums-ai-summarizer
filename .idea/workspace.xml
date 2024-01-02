@@ -5,18 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0dc179a0-6d30-4e8a-85ce-8cc1ee92006e" name="Changes" comment="crawl comment in voz forum and fix save data">
-      <change afterPath="$PROJECT_DIR$/http/crawler.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/CommentWithSourceTypeResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/api/Get.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/config/CacheConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/service/ApplicationContextProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/api/Get.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/forum/util/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4a8d5946-275b-44eb-b9d9-6f65c48f5507.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4a8d5946-275b-44eb-b9d9-6f65c48f5507.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/http/crawler.http" beforeDir="false" afterPath="$PROJECT_DIR$/http/crawler.http" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/api/Crawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/api/Crawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/comment/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/Comment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/config/DbConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/config/DbConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/OtoSaigonCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/OtoSaigonCrawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/TinhTeCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/TinhTeCrawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/VozCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/VozCrawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/thread/Thread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/Thread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/api/Crawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/api/Crawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/comment/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/domain/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/comment/CommentRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/comment/domain/CommentRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/OtoSaigonCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/service/OtoSaigonCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/TinhTeCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/service/TinhTeCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/crawler/VozCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/crawler/service/VozCrawler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/thread/Thread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/domain/Thread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/thread/ThreadRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/thread/domain/ThreadRepo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/forum-comment.db" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/forum-comment.db" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,6 +63,9 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.20.0/646229509a21876eb5e6434f24ec3164665c6c38/log4j-api-2.20.0-sources.jar!/org/apache/logging/log4j/util/Strings.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -115,7 +125,7 @@
       <module name="forum-crawler.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.forum.crawler.*" />
+          <option name="PATTERN" value="com.forum.crawler.service.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -196,7 +206,20 @@
       <workItem from="1703547030563" duration="7491000" />
       <workItem from="1703574655983" duration="41000" />
       <workItem from="1703575382512" duration="5170000" />
-      <workItem from="1703580669084" duration="3608000" />
+      <workItem from="1703580669084" duration="3896000" />
+      <workItem from="1703596432015" duration="1471000" />
+      <workItem from="1703607307182" duration="600000" />
+      <workItem from="1703632879365" duration="6599000" />
+      <workItem from="1703662130658" duration="9945000" />
+      <workItem from="1703675271948" duration="7999000" />
+      <workItem from="1703719623859" duration="607000" />
+      <workItem from="1703720818979" duration="3901000" />
+      <workItem from="1703735965724" duration="74000" />
+      <workItem from="1703736098648" duration="802000" />
+      <workItem from="1703749058047" duration="2748000" />
+      <workItem from="1703751881298" duration="3712000" />
+      <workItem from="1704179230713" duration="143000" />
+      <workItem from="1704181344606" duration="9007000" />
     </task>
     <task id="LOCAL-00001" summary="config for sqlite">
       <created>1703430016954</created>
@@ -226,5 +249,21 @@
     <MESSAGE value="config for sqlite" />
     <MESSAGE value="crawl comment in voz forum and fix save data" />
     <option name="LAST_COMMIT_MESSAGE" value="crawl comment in voz forum and fix save data" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/forum/comment/api/Get.java</url>
+          <line>22</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/forum/crawler/service/OtoSaigonCrawler.java</url>
+          <line>61</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

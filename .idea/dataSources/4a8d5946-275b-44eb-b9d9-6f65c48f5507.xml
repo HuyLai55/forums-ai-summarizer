@@ -1469,74 +1469,98 @@
     </argument>
     <table id="518" parent="177" name="forum_comment"/>
     <table id="519" parent="177" name="forum_thread"/>
-    <table id="520" parent="177" name="sqlite_master">
+    <table id="520" parent="177" name="forum_thread_comments"/>
+    <table id="521" parent="177" name="sqlite_master">
       <System>1</System>
     </table>
-    <column id="521" parent="518" name="comment_id">
+    <column id="522" parent="518" name="comment_id">
       <DasType>integer|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="522" parent="518" name="comment">
+    <column id="523" parent="518" name="comment">
       <DasType>varchar(255)|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="523" parent="518" name="created_at">
+    <column id="524" parent="518" name="created_at">
       <DasType>timestamp|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="524" parent="518" name="user_name">
+    <column id="525" parent="518" name="user_name">
       <DasType>varchar(255)|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="525" parent="518" name="user_title">
+    <column id="526" parent="518" name="user_title">
       <DasType>varchar(255)|0s</DasType>
       <Position>5</Position>
     </column>
-    <column id="526" parent="518" name="thread_id">
+    <column id="527" parent="518" name="thread_id">
       <DasType>bigint|0s</DasType>
       <Position>6</Position>
     </column>
-    <key id="527" parent="518">
+    <key id="528" parent="518">
       <ColNames>comment_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="528" parent="519" name="thread_id">
+    <column id="529" parent="519" name="thread_id">
       <DasType>integer|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="529" parent="519" name="created_at">
+    <column id="530" parent="519" name="created_at">
       <DasType>timestamp|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="530" parent="519" name="title">
+    <column id="531" parent="519" name="title">
       <DasType>varchar(255)|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="531" parent="519" name="user_name">
+    <column id="532" parent="519" name="user_name">
       <DasType>varchar(255)|0s</DasType>
       <Position>4</Position>
     </column>
-    <key id="532" parent="519">
+    <column id="533" parent="519" name="source_type">
+      <DasType>varchar(255)|0s</DasType>
+      <Position>5</Position>
+    </column>
+    <key id="534" parent="519">
       <ColNames>thread_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="533" parent="520" name="type">
+    <column id="535" parent="520" name="forum_thread_thread_id">
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="536" parent="520" name="comments_comment_id">
+      <DasType>bigint|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <index id="537" parent="520" name="sqlite_autoindex_forum_thread_comments_1">
+      <ColNames>comments_comment_id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <Unique>1</Unique>
+    </index>
+    <key id="538" parent="520">
+      <ColNames>comments_comment_id</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_forum_thread_comments_1</UnderlyingIndexName>
+    </key>
+    <column id="539" parent="521" name="type">
       <DasType>TEXT|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="534" parent="520" name="name">
+    <column id="540" parent="521" name="name">
       <DasType>TEXT|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="535" parent="520" name="tbl_name">
+    <column id="541" parent="521" name="tbl_name">
       <DasType>TEXT|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="536" parent="520" name="rootpage">
+    <column id="542" parent="521" name="rootpage">
       <DasType>INT|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="537" parent="520" name="sql">
+    <column id="543" parent="521" name="sql">
       <DasType>TEXT|0s</DasType>
       <Position>5</Position>
     </column>

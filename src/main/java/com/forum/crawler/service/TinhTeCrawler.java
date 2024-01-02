@@ -1,9 +1,9 @@
-package com.forum.crawler;
+package com.forum.crawler.service;
 
-import com.forum.comment.Comment;
-import com.forum.comment.CommentRepo;
-import com.forum.thread.Thread;
-import com.forum.thread.ThreadRepo;
+import com.forum.comment.domain.Comment;
+import com.forum.comment.domain.CommentRepo;
+import com.forum.thread.domain.Thread;
+import com.forum.thread.domain.ThreadRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,9 +23,9 @@ public class TinhTeCrawler {
     @Autowired
     ThreadRepo threadRepo;
 
-    public List<Comment> getListComments(String url, String urlPage1) throws IOException {
-        Thread infoThreadInWeb = getInfoThread(url);
-        Thread thread = threadRepo.findOne(ThreadRepo.Spec.byUserAndTitle(infoThreadInWeb.userName, infoThreadInWeb.title)).orElse(null);
+    public List<Comment> getListComments(String url, String urlPage1, String sourceType) throws IOException {
+        Thread infoThreadInWeb = getInfoThread(url, sourceType);
+        Thread thread = threadRepo.findOne(ThreadRepo.Spec.bySourceTypeAndTitle(infoThreadInWeb.sourceType, infoThreadInWeb.title)).orElse(null);
         List<Comment> commentIsSaved;
         int sizeOfCommentIsSaved = 0;
         if (thread != null) {
@@ -76,13 +76,13 @@ public class TinhTeCrawler {
         return Optional.empty();
     }
 
-    private Thread getInfoThread(String url) throws IOException {
+    private Thread getInfoThread(String url, String sourceType) throws IOException {
         Document document = Jsoup.connect(url).get();
         String threadUserName = document.getElementsByClass("jsx-89440 author-name").select("a").text();
         String threadTitle = document.getElementsByClass("jsx-89440 thread-title").text();
         LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text());
 
-        return new Thread(threadUserName, threadTitle, dateTimeThread);
+        return new Thread(sourceType, threadUserName, threadTitle, dateTimeThread);
     }
 
     private List<Comment> crawOnePageOnly(String url, Long threadId) throws IOException {

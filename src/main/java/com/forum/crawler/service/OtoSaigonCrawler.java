@@ -1,9 +1,9 @@
-package com.forum.crawler;
+package com.forum.crawler.service;
 
-import com.forum.comment.Comment;
-import com.forum.comment.CommentRepo;
-import com.forum.thread.Thread;
-import com.forum.thread.ThreadRepo;
+import com.forum.comment.domain.Comment;
+import com.forum.comment.domain.CommentRepo;
+import com.forum.thread.domain.Thread;
+import com.forum.thread.domain.ThreadRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,17 +21,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class VozCrawler {
+public class OtoSaigonCrawler {
     @Autowired
     ThreadRepo threadRepo;
     @Autowired
     CommentRepo commentRepo;
-    @Value("${user-agent}")
-    String userAgent;
 
-    public List<Comment> getListComments(String url) throws IOException {
-        Thread infoThreadInWeb = getInfoThread(url);
-        Thread thread = threadRepo.findOne(ThreadRepo.Spec.byUserAndTitle(infoThreadInWeb.userName, infoThreadInWeb.title)).orElse(null);
+    public List<Comment> getListComments(String url, String sourceType) throws IOException {
+        Thread infoThreadInWeb = getInfoThread(url, sourceType);
+        Thread thread = threadRepo.findOne(ThreadRepo.Spec.bySourceTypeAndTitle(infoThreadInWeb.userName, infoThreadInWeb.title)).orElse(null);
         List<Comment> commentIsSaved;
         int sizeOfCommentIsSaved = 0;
         if (thread != null) {
@@ -59,20 +58,16 @@ public class VozCrawler {
         return commentList;
     }
 
-    private Thread getInfoThread(String url) throws IOException {
-        Document document = Jsoup.connect(url).userAgent(userAgent).get();
-        String threadUserName = document.getElementsByClass("username  u-concealed").text();
+    private Thread getInfoThread(String url, String sourceType) throws IOException {
+        Document document = Jsoup.connect(url).get();
         String threadTitle = document.getElementsByClass("p-title-value").text();
-        LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("listInline listInline--bullet")
-                .select("li").select("a").select("time.u-dt").attr("datetime"));
-
-        return new Thread(threadUserName, threadTitle, dateTimeThread);
+        return new Thread(sourceType, threadTitle);
     }
 
     private Optional<String> extractNextUrl(String url) throws IOException {
-        Document document = Jsoup.connect(url).userAgent(userAgent).get();
+        Document document = Jsoup.connect(url).get();
 
-        Elements nextPage = document.getElementsByClass("pageNav-jump pageNav-jump--next");
+        Elements nextPage = document.getElementsByClass("pageNav-jump--next");
 
         if (nextPage.size() > 0) {
             return Optional.of(nextPage.get(0).absUrl("href"));
@@ -84,19 +79,18 @@ public class VozCrawler {
     // lấy tất cả comments
     private List<Comment> crawOnePageOnly(String url, Long threadId) throws IOException {
         List<Comment> listComments = new ArrayList<>();
-        Document document = Jsoup.connect(url).userAgent(userAgent).get();
+        Document document = Jsoup.connect(url).get();
         document.outputSettings().prettyPrint(false);
         document.select("br").before("\\n");
         document.select("p").before("\\n");
 
-        Elements elmCommentInfo = document.getElementsByClass("message message--post js-post js-inlineModContainer  ");
+        Elements elmCommentInfo = document.getElementsByClass("message message--post  js-post js-inlineModContainer  ");
         for (int i = 0; i < elmCommentInfo.size(); i++) {
             Elements elmUsers = elmCommentInfo.get(i).getElementsByClass("message-name");
             String userName = elmUsers.text();
             String userTitle = elmCommentInfo.get(i).getElementsByClass("userTitle message-userTitle").text();
 
-            Elements elmDates = elmCommentInfo.get(i).getElementsByClass("message-attribution-main listInline ")
-                    .select("li.u-concealed").select("a").select("time.u-dt");
+            Elements elmDates = elmCommentInfo.get(i).getElementsByClass("u-dt");
             String dateCreatedToString = elmDates.attr("datetime");
             LocalDateTime dateCreated = convertStringToDateTime(dateCreatedToString);
 
@@ -128,3 +122,4 @@ public class VozCrawler {
         return strWithNewLines;
     }
 }
+

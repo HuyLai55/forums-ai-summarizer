@@ -1,0 +1,13 @@
+@urlBase=http://localhost:8081
+
+@threadId=31
+@sourceTypeStr=oToSaiGon
+@page=1
+@pageSize=10
+
+### getById
+GET {{urlBase}}/api/v1/comment?threadId={{threadId}}&page={{page}}&pageSize={{pageSize}}
+
+### getBySourceType
+GET {{urlBase}}/api/v1/comment/{{sourceTypeStr}}?page={{page}}&pageSize={{pageSize}}
+

@@ -1,8 +1,7 @@
-@urlBase=http://localhost:8081/ai-summarizer
+@urlBase=http://localhost:8081
 
-@sourceTypeStr=voz
-@url=https://voz.vn/t/chon-nikon-z5-hay-sony-a7r2.889618/
-###
+@sourceTypeStr=oToSaiGon
+@url=https://www.otosaigon.com/threads/co-nen-do-phuoc-cho-toyota-vios-de-em-hon.9070221/
 GET {{urlBase}}/api/v1/crawler/{{sourceTypeStr}}?url={{url}}
 Content-Type: application/json
 

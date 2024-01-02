@@ -1,0 +1,8 @@
+@urlBase=http://localhost:8081
+
+@sourceTypeStr=voz
+@page=1
+@pageSize=1
+
+GET {{urlBase}}/api/v1/thread/{{sourceTypeStr}}?page={{page}}&pageSize={{pageSize}}
+Content-Type: application/json
