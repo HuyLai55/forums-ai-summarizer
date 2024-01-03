@@ -1,8 +1,9 @@
 @urlBase=http://localhost:8081
 
-@sourceTypeStr=oToSaiGon
-@url=https://www.otosaigon.com/threads/co-nen-do-phuoc-cho-toyota-vios-de-em-hon.9070221/
-GET {{urlBase}}/api/v1/crawler/{{sourceTypeStr}}?url={{url}}
+POST {{urlBase}}/api/v1/threads
 Content-Type: application/json
 
-
+{
+    "url": "https://tinhte.vn/thread/mxh-x-gio-co-gia-tri-chi-bang-30-so-tien-elon-musk-bo-ra-mua-lai.3753588/?ta_from_block=home_quick_news",
+    "source": "tinhte"
+}

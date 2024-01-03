@@ -1,14 +1,15 @@
-package com.forum.crawler.service;
+package com.forum.service.crawler;
 
-import com.forum.comment.domain.Comment;
-import com.forum.comment.domain.CommentRepo;
-import com.forum.thread.domain.Thread;
-import com.forum.thread.domain.ThreadRepo;
+import com.forum.domain.Comment;
+import com.forum.repo.CommentRepo;
+import com.forum.domain.Thread;
+import com.forum.repo.ThreadRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
@@ -23,35 +24,34 @@ public class TinhTeCrawler {
     @Autowired
     ThreadRepo threadRepo;
 
-    public List<Comment> getListComments(String url, String urlPage1, String sourceType) throws IOException {
-        Thread infoThreadInWeb = getInfoThread(url, sourceType);
-        Thread thread = threadRepo.findOne(ThreadRepo.Spec.bySourceTypeAndTitle(infoThreadInWeb.sourceType, infoThreadInWeb.title)).orElse(null);
-        List<Comment> commentIsSaved;
-        int sizeOfCommentIsSaved = 0;
-        if (thread != null) {
-            commentIsSaved = commentRepo.findAll(CommentRepo.Spec.byThreadId(thread.threadId));
-            sizeOfCommentIsSaved = commentIsSaved.size();
+    public Thread crawlThreadInfo(String url) throws IOException {
+        Thread thread = threadRepo.findByThreadUrl(url);
+        if (thread == null) {
+            thread = new Thread();
+            thread.setSource(Thread.Source.tinhte);
+            thread.setThreadUrl(url);
+
+            Document document = Jsoup.connect(url).get();
+            thread.setCreator(document.getElementsByClass("jsx-89440 author-name").select("a").text());
+            thread.setTitle(document.getElementsByClass("jsx-89440 thread-title").text());
+            thread.setCreatedAt(convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text()));
+
+            thread = threadRepo.save(thread);
         }
 
-        List<Comment> commentList = new ArrayList<>();
-        if (thread == null) {
-            thread = threadRepo.save(infoThreadInWeb);
-        }
-        commentList.addAll(crawOnePageOnly(url, thread.threadId));
+        return thread;
+    }
+
+    @Async
+    public void crawlComments(String url, Thread thread) throws IOException {
+        String urlPage1 = url;
+        crawlNewCommentOnePageOnly(url, thread);
         Optional<String> nextPage = extractNextUrl(url, urlPage1);
         while (nextPage.isPresent()) {
             url = nextPage.get();
-            commentList.addAll(crawOnePageOnly(url, thread.threadId)); //crawling next Page
+            crawlNewCommentOnePageOnly(url, thread); //crawling next Page
             nextPage = extractNextUrl(url, urlPage1);
         }
-        int amountNewComment = commentList.size() - sizeOfCommentIsSaved;
-        if (amountNewComment > 0) {
-            for (int i = 0; i < amountNewComment; i++) {
-                commentRepo.save(commentList.get(sizeOfCommentIsSaved + i));
-            }
-        }
-
-        return commentList;
     }
 
     Optional<String> extractNextUrl(String url, String urlPage1) throws IOException {
@@ -76,41 +76,36 @@ public class TinhTeCrawler {
         return Optional.empty();
     }
 
-    private Thread getInfoThread(String url, String sourceType) throws IOException {
+    private void crawlNewCommentOnePageOnly(String url, Thread thread) throws IOException {
         Document document = Jsoup.connect(url).get();
-        String threadUserName = document.getElementsByClass("jsx-89440 author-name").select("a").text();
-        String threadTitle = document.getElementsByClass("jsx-89440 thread-title").text();
-        LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text());
+        List<Comment> commentsIsSaved = commentRepo.findByThreadId(thread.getThreadId());
+        LocalDateTime timeLastCommentIsSaved = thread.getCreatedAt();
+        if (!commentsIsSaved.isEmpty()) {
+            timeLastCommentIsSaved = commentsIsSaved.get(commentsIsSaved.size() - 1).getCreatedAt();
+        }
 
-        return new Thread(sourceType, threadUserName, threadTitle, dateTimeThread);
-    }
-
-    private List<Comment> crawOnePageOnly(String url, Long threadId) throws IOException {
-        List<Comment> listComments = new ArrayList<>();
-        Document document = Jsoup.connect(url).get();
-
-        LocalDateTime dateTimeThread = convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text());
         Elements elmCommentInfo = document.getElementsByClass("jsx-691990575 thread-comment__box   ");
         for (int i = 0; i < elmCommentInfo.size(); i++) {
             if (elmCommentInfo.size() == 0) {
                 throw new FileNotFoundException("thread have not comment");
             }
-            String userName = elmCommentInfo.get(i).getElementsByClass("jsx-691990575 author-name").text();
-            String userTitle = elmCommentInfo.get(i).getElementsByClass("jsx-691990575 author-rank").text();
-
             Elements elmDates = elmCommentInfo.get(i).getElementsByClass("jsx-691990575 thread-comment__date");
-
             String dateCreatedToString = elmDates.get(0).text();
-            LocalDateTime dateCreated = convertCommentTime(dateTimeThread, dateCreatedToString);
-
-            Elements elmComments = elmCommentInfo.get(i).getElementsByClass("xf-body-paragraph");
-            String comment = elmComments.text();
-
-            Comment commentInfo = new Comment(threadId, userName, userTitle, comment, dateCreated);
-            listComments.add(commentInfo);
+            LocalDateTime dateCreated = convertCommentTime(dateCreatedToString);
+            if (dateCreated.isAfter(timeLastCommentIsSaved)) {
+                Comment comment = new Comment();
+                comment.setThreadId(thread.getThreadId());
+                comment.setCreatedAt(dateCreated);
+                String userName = elmCommentInfo.get(i).getElementsByClass("jsx-691990575 author-name").text();
+                comment.setUsername(userName);
+                String userRank = elmCommentInfo.get(i).getElementsByClass("jsx-691990575 author-rank").text();
+                comment.setUserRank(userRank);
+                Elements elmComments = elmCommentInfo.get(i).getElementsByClass("xf-body-paragraph");
+                String contentComment = elmComments.text();
+                comment.setComment(contentComment);
+                commentRepo.save(comment);
+            }
         }
-
-        return listComments;
     }
 
     private LocalDateTime convertStringToDateTime(String dateTimeInString) {
@@ -125,19 +120,19 @@ public class TinhTeCrawler {
     }
 
     //comment time is time from thread is created
-    private LocalDateTime convertCommentTime(LocalDateTime timeCreatedThread, String commentTime) {
-        LocalDateTime commentTimeInLocal = timeCreatedThread;
+    private LocalDateTime convertCommentTime(String commentTime) {
+        LocalDateTime commentTimeInLocal = LocalDateTime.now();
         int commentTimeTypeInt = 0;
 
         if (commentTime.contains("một")) {
             if (commentTime.contains("phút")) {
-                commentTimeInLocal = timeCreatedThread.plusMinutes(1);
+                commentTimeInLocal = LocalDateTime.now().minusMinutes(1);
             } else if (commentTime.contains("giờ")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(1);
+                commentTimeInLocal = LocalDateTime.now().minusHours(1);
             } else if (commentTime.contains("tháng")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(1);
+                commentTimeInLocal = LocalDateTime.now().minusMonths(1);
             } else if (commentTime.contains("năm")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(1);
+                commentTimeInLocal = LocalDateTime.now().minusYears(1);
             }
         } else {
             for (int i = 1; i < commentTime.length(); i++) {
@@ -146,39 +141,39 @@ public class TinhTeCrawler {
                 }
             }
             if (commentTime.contains("phút")) {
-                commentTimeInLocal = timeCreatedThread.plusMinutes(commentTimeTypeInt);
+                commentTimeInLocal = LocalDateTime.now().minusMinutes(commentTimeTypeInt);
             } else if (commentTime.contains("giờ")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(commentTimeTypeInt);
+                commentTimeInLocal = LocalDateTime.now().minusHours(commentTimeTypeInt);
             } else if (commentTime.contains("tháng")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(commentTimeTypeInt);
+                commentTimeInLocal = LocalDateTime.now().minusMonths(commentTimeTypeInt);
             } else if (commentTime.contains("năm")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(commentTimeTypeInt);
+                commentTimeInLocal = LocalDateTime.now().minusYears(commentTimeTypeInt);
             }
         }
 
         if (commentTime.contains("phút")) {
             if (commentTime.contains("một")) {
-                commentTimeInLocal = timeCreatedThread.plusMinutes(1);
+                commentTimeInLocal = LocalDateTime.now().minusMinutes(1);
             } else {
-                commentTimeInLocal = timeCreatedThread.plusMinutes(commentTimeTypeInt);
+                commentTimeInLocal = LocalDateTime.now().minusMinutes(commentTimeTypeInt);
             }
         } else if (commentTime.contains("giờ")) {
             if (commentTime.contains("một")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(1);
+                commentTimeInLocal = LocalDateTime.now().minusHours(1);
             } else {
-                commentTimeInLocal = timeCreatedThread.plusHours(commentTimeTypeInt);
+                commentTimeInLocal = LocalDateTime.now().minusHours(commentTimeTypeInt);
             }
         } else if (commentTime.contains("tháng")) {
             if (commentTime.contains("một")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(1);
+                commentTimeInLocal = LocalDateTime.now().minusMonths(1);
             } else {
-                commentTimeInLocal = timeCreatedThread.plusHours(commentTimeTypeInt);
+                commentTimeInLocal = LocalDateTime.now().minusMonths(commentTimeTypeInt);
             }
         } else if (commentTime.contains("năm")) {
             if (commentTime.contains("một")) {
-                commentTimeInLocal = timeCreatedThread.plusHours(1);
+                commentTimeInLocal = LocalDateTime.now().minusYears(1);
             } else {
-                commentTimeInLocal = timeCreatedThread.plusHours(commentTimeTypeInt);
+                commentTimeInLocal = LocalDateTime.now().minusYears(commentTimeTypeInt);
             }
         }
 

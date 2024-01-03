@@ -1,8 +1,6 @@
 @urlBase=http://localhost:8081
 
-@sourceTypeStr=voz
-@page=1
-@pageSize=1
+@url=https://voz.vn/t/ms-edge-trinh-duyet-mat-day-bo-lao-tu-dong-an-cap-data-tu-trinh-duyet-khac.901666/
 
-GET {{urlBase}}/api/v1/thread/{{sourceTypeStr}}?page={{page}}&pageSize={{pageSize}}
+GET {{urlBase}}/api/v1/threads?url={{url}}
 Content-Type: application/json
