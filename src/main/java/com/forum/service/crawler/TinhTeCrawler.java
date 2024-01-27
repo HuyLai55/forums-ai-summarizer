@@ -1,9 +1,11 @@
 package com.forum.service.crawler;
 
 import com.forum.domain.Comment;
+import com.forum.domain.ThreadSummary;
 import com.forum.repo.CommentRepo;
 import com.forum.domain.Thread;
 import com.forum.repo.ThreadRepo;
+import com.forum.repo.ThreadSummaryRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,6 +25,8 @@ public class TinhTeCrawler {
     CommentRepo commentRepo;
     @Autowired
     ThreadRepo threadRepo;
+    @Autowired
+    ThreadSummaryRepo threadSummaryRepo;
 
     public Thread crawlThreadInfo(String url) throws IOException {
         Thread thread = threadRepo.findByThreadUrl(url);
@@ -37,6 +41,12 @@ public class TinhTeCrawler {
             thread.setCreatedAt(convertStringToDateTime(document.getElementsByClass("jsx-89440 date").text()));
 
             thread = threadRepo.save(thread);
+
+            ThreadSummary threadSummary = new ThreadSummary();
+            threadSummary.setThreadId(thread.getThreadId());
+            threadSummary.setCommentsTokensLength(0L);
+
+            threadSummaryRepo.save(threadSummary);
         }
 
         return thread;
@@ -62,12 +72,12 @@ public class TinhTeCrawler {
         }
         Element currentPage = currentPageByClass.get(0);
         String currentPageInText = currentPage.text();
-        Integer currentPageInInt = Integer.valueOf(currentPageInText);
+        int currentPageInInt = Integer.parseInt(currentPageInText);
         Elements pageDifPageInBottom = document.getElementsByClass("jsx-2305813501 page ");
 
         for (int i = 0; i < pageDifPageInBottom.size() / 2; i++) {
             String pageDifInText = pageDifPageInBottom.get(i).text();
-            Integer nextPageInInt = Integer.valueOf(pageDifInText);
+            int nextPageInInt = Integer.parseInt(pageDifInText);
             if (nextPageInInt == currentPageInInt + 1) {
                 return Optional.of(urlPage1 + "/page-" + nextPageInInt);
             }
@@ -78,6 +88,8 @@ public class TinhTeCrawler {
 
     private void crawlNewCommentOnePageOnly(String url, Thread thread) throws IOException {
         Document document = Jsoup.connect(url).get();
+        ThreadSummary threadSummary = threadSummaryRepo.findByThreadId(thread.getThreadId());
+        Long commentsTokensLength = threadSummary.getCommentsTokensLength();
         List<Comment> commentsIsSaved = commentRepo.findByThreadId(thread.getThreadId());
         LocalDateTime timeLastCommentIsSaved = thread.getCreatedAt();
         if (!commentsIsSaved.isEmpty()) {
@@ -102,9 +114,14 @@ public class TinhTeCrawler {
                 comment.setUserRank(userRank);
                 Elements elmComments = elmCommentInfo.get(i).getElementsByClass("xf-body-paragraph");
                 String contentComment = elmComments.text();
+                StringTokenizer stringTokenizer = new StringTokenizer(contentComment);
+                long tokensLengthInComment = stringTokenizer.countTokens();
+                commentsTokensLength += tokensLengthInComment;
                 comment.setComment(contentComment);
                 commentRepo.save(comment);
             }
+            threadSummary.setCommentsTokensLength(commentsTokensLength);
+            threadSummaryRepo.save(threadSummary);
         }
     }
 
@@ -115,8 +132,7 @@ public class TinhTeCrawler {
         int year = Integer.parseInt(splitDateTime[2]);
         int hour = Integer.parseInt(splitDateTime[3]);
         int minute = Integer.parseInt(splitDateTime[4]);
-        LocalDateTime time = LocalDateTime.of(year, month, day, hour, minute);
-        return time;
+        return LocalDateTime.of(year, month, day, hour, minute);
     }
 
     //comment time is time from thread is created
@@ -136,7 +152,7 @@ public class TinhTeCrawler {
             }
         } else {
             for (int i = 1; i < commentTime.length(); i++) {
-                if (commentTime.charAt(i) == Character.valueOf(' ')) {
+                if (commentTime.charAt(i) == (' ')) {
                     commentTimeTypeInt = Integer.parseInt(commentTime.substring(0, i));
                 }
             }

@@ -1,6 +1,13 @@
 @urlBase=http://localhost:8081
 
-@url=https://voz.vn/t/ms-edge-trinh-duyet-mat-day-bo-lao-tu-dong-an-cap-data-tu-trinh-duyet-khac.901666/
+@url=https://voz.vn/t/netflix-4k-nhung.911822/
 
+// get thread
 GET {{urlBase}}/api/v1/threads?url={{url}}
 Content-Type: application/json
+
+###
+// get summary
+POST  {{urlBase}}/api/v1/threads/summary?url={{url}}
+Content-Type: application/json
+

@@ -22,7 +22,7 @@ public class Crawl {
     @Autowired
     VozCrawler vozCrawler;
 
-    @PostMapping
+    @PostMapping("/crawl")
     public Thread crawl(@RequestBody CrawRequestDto request) throws IOException {
         Thread thread = null;
         if (request.getSource() == Thread.Source.otosaigon) {

@@ -31,4 +31,14 @@ public class Get {
 
         return commentRepo.findByThreadId(thread.getThreadId(), sortedByCreatedAt);
     }
+
+    @GetMapping("/{threadId}/comments")
+    public String getByThreadId(@PathVariable Long threadId) {
+        List<Comment> list = commentRepo.findByThreadId(threadId);
+        StringBuilder comments = new StringBuilder();
+        for (Comment c : list) {
+            comments.append(c.getComment());
+        }
+        return comments.toString();
+    }
 }

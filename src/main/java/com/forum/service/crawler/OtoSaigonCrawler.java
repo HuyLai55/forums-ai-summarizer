@@ -1,9 +1,11 @@
 package com.forum.service.crawler;
 
 import com.forum.domain.Comment;
+import com.forum.domain.ThreadSummary;
 import com.forum.repo.CommentRepo;
 import com.forum.domain.Thread;
 import com.forum.repo.ThreadRepo;
+import com.forum.repo.ThreadSummaryRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
@@ -17,11 +19,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 @Component
 public class OtoSaigonCrawler {
     @Autowired
     ThreadRepo threadRepo;
+    @Autowired
+    ThreadSummaryRepo threadSummaryRepo;
     @Autowired
     CommentRepo commentRepo;
 
@@ -36,14 +41,20 @@ public class OtoSaigonCrawler {
             Elements elmComments = document.getElementsByClass("message message--post  js-post js-inlineModContainer  ");
             Elements elmUser = elmComments.get(0).getElementsByClass("message-name");
             thread.setCreator(elmUser.text());
+            thread.setTitle(document.getElementsByClass("p-title-value").text());
 
             Elements elmDate = elmComments.get(0).getElementsByClass("u-dt");
             String dateCreatedToString = elmDate.attr("datetime");
             LocalDateTime createdAt = convertStringToDateTime(dateCreatedToString);
             thread.setCreatedAt(createdAt);
 
-            thread.setTitle(document.getElementsByClass("p-title-value").text());
             thread = threadRepo.save(thread);
+
+            ThreadSummary threadSummary = new ThreadSummary();
+            threadSummary.setThreadId(thread.getThreadId());
+            threadSummary.setCommentsTokensLength(0L);
+
+            threadSummaryRepo.save(threadSummary);
         }
 
         return thread;
@@ -79,6 +90,8 @@ public class OtoSaigonCrawler {
         document.outputSettings().prettyPrint(false);
         document.select("br").before("\\n");
         document.select("p").before("\\n");
+        ThreadSummary threadSummary = threadSummaryRepo.findByThreadId(thread.getThreadId());
+        Long commentsTokensLength = threadSummary.getCommentsTokensLength();
         List<Comment> commentsIsSaved = commentRepo.findByThreadId(thread.getThreadId());
         LocalDateTime timeLastComment = thread.getCreatedAt();
         if (!commentsIsSaved.isEmpty()) {
@@ -98,10 +111,16 @@ public class OtoSaigonCrawler {
                 comment.setUserRank(elmComments.get(i).getElementsByClass("userTitle message-userTitle").text());
                 comment.setCreatedAt(timeOfCommentIsCrawling);
                 Elements elmComment = elmComments.get(i).getElementsByClass("bbWrapper");
-                comment.setComment(extractString(elmComment.text()));
+                String content = extractString(elmComment.text());
+                StringTokenizer stringTokenizer = new StringTokenizer(content);
+                long tokensLengthInComment = stringTokenizer.countTokens();
+                commentsTokensLength += tokensLengthInComment;
+                comment.setComment(content);
                 commentRepo.save(comment);
             }
         }
+        threadSummary.setCommentsTokensLength(commentsTokensLength);
+        threadSummaryRepo.save(threadSummary);
     }
 
     private String removeLetter(String time) {

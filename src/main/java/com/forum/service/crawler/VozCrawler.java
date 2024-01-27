@@ -1,9 +1,11 @@
 package com.forum.service.crawler;
 
 import com.forum.domain.Comment;
+import com.forum.domain.ThreadSummary;
 import com.forum.repo.CommentRepo;
 import com.forum.domain.Thread;
 import com.forum.repo.ThreadRepo;
+import com.forum.repo.ThreadSummaryRepo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Safelist;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 @Component
 public class VozCrawler {
@@ -25,6 +28,8 @@ public class VozCrawler {
     ThreadRepo threadRepo;
     @Autowired
     CommentRepo commentRepo;
+    @Autowired
+    ThreadSummaryRepo threadSummaryRepo;
     @Value("${user-agent}")
     String userAgent;
 
@@ -44,6 +49,12 @@ public class VozCrawler {
             thread.setCreatedAt(dateTimeThread);
 
             thread = threadRepo.save(thread);
+
+            ThreadSummary threadSummary = new ThreadSummary();
+            threadSummary.setThreadId(thread.getThreadId());
+            threadSummary.setCommentsTokensLength(0L);
+
+            threadSummaryRepo.save(threadSummary);
         }
 
         return thread;
@@ -62,9 +73,7 @@ public class VozCrawler {
 
     private Optional<String> extractNextUrl(String url) throws IOException {
         Document document = Jsoup.connect(url).userAgent(userAgent).get();
-
         Elements nextPage = document.getElementsByClass("pageNav-jump pageNav-jump--next");
-
         if (nextPage.size() > 0) {
             return Optional.of(nextPage.get(0).absUrl("href"));
         }
@@ -74,6 +83,8 @@ public class VozCrawler {
 
     // lấy tất cả comments
     private void crawlNewCommentOnePageOnly(String url, Thread thread) throws IOException {
+        ThreadSummary threadSummary = threadSummaryRepo.findByThreadId(thread.getThreadId());
+        Long commentsTokensLength = threadSummary.getCommentsTokensLength();
         List<Comment> commentsIsSaved = commentRepo.findByThreadId(thread.getThreadId());
         LocalDateTime timeLastCommentIsSaved = thread.getCreatedAt();
         if (!commentsIsSaved.isEmpty()) {
@@ -101,9 +112,14 @@ public class VozCrawler {
                 comment.setUserRank(userRank);
                 Elements elmComments = elmCommentInfo.get(i).getElementsByClass("bbWrapper");
                 String contentComment = extractString(elmComments.text());
+                StringTokenizer stringTokenizer = new StringTokenizer(contentComment);
+                Long tokensLengthInComment = (long) stringTokenizer.countTokens();
+                commentsTokensLength += tokensLengthInComment;
                 comment.setComment(contentComment);
                 commentRepo.save(comment);
             }
+            threadSummary.setCommentsTokensLength(commentsTokensLength);
+            threadSummaryRepo.save(threadSummary);
         }
     }
 
