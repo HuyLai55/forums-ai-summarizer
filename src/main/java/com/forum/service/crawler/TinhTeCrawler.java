@@ -1,9 +1,9 @@
 package com.forum.service.crawler;
 
 import com.forum.domain.Comment;
+import com.forum.domain.Thread;
 import com.forum.domain.ThreadSummary;
 import com.forum.repo.CommentRepo;
-import com.forum.domain.Thread;
 import com.forum.repo.ThreadRepo;
 import com.forum.repo.ThreadSummaryRepo;
 import org.jsoup.Jsoup;
@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.StringTokenizer;
 
 @Component
 public class TinhTeCrawler {
@@ -66,20 +68,20 @@ public class TinhTeCrawler {
 
     Optional<String> extractNextUrl(String url, String urlPage1) throws IOException {
         Document document = Jsoup.connect(url).get();
-        Elements currentPageByClass = document.getElementsByClass("jsx-2305813501 page current");
-        if (currentPageByClass.size() == 0) {
+        Elements currentPageElements = document.getElementsByClass("jsx-2305813501 page current");
+        if (currentPageElements.size() == 0) {
             return Optional.empty();
         }
-        Element currentPage = currentPageByClass.get(0);
-        String currentPageInText = currentPage.text();
-        int currentPageInInt = Integer.parseInt(currentPageInText);
+        Element currentPageElement = currentPageElements.get(0);
+        String formatStringCurrentPage = currentPageElement.text();
+        int currentPage = Integer.parseInt(formatStringCurrentPage);
         Elements pageDifPageInBottom = document.getElementsByClass("jsx-2305813501 page ");
 
         for (int i = 0; i < pageDifPageInBottom.size() / 2; i++) {
             String pageDifInText = pageDifPageInBottom.get(i).text();
-            int nextPageInInt = Integer.parseInt(pageDifInText);
-            if (nextPageInInt == currentPageInInt + 1) {
-                return Optional.of(urlPage1 + "/page-" + nextPageInInt);
+            int nextPage = Integer.parseInt(pageDifInText);
+            if (nextPage == currentPage + 1) {
+                return Optional.of(urlPage1 + "/page-" + nextPage);
             }
         }
 
@@ -96,27 +98,27 @@ public class TinhTeCrawler {
             timeLastCommentIsSaved = commentsIsSaved.get(commentsIsSaved.size() - 1).getCreatedAt();
         }
 
-        Elements elmCommentInfo = document.getElementsByClass("jsx-691990575 thread-comment__box   ");
-        for (int i = 0; i < elmCommentInfo.size(); i++) {
-            if (elmCommentInfo.size() == 0) {
+        Elements commentElements = document.getElementsByClass("jsx-691990575 thread-comment__box   ");
+        for (int i = 0; i < commentElements.size(); i++) {
+            if (commentElements.size() == 0) {
                 throw new FileNotFoundException("thread have not comment");
             }
-            Elements elmDates = elmCommentInfo.get(i).getElementsByClass("jsx-691990575 thread-comment__date");
-            String dateCreatedToString = elmDates.get(0).text();
-            LocalDateTime dateCreated = convertCommentTime(dateCreatedToString);
-            if (dateCreated.isAfter(timeLastCommentIsSaved)) {
+            Elements dateElements = commentElements.get(i).getElementsByClass("jsx-691990575 thread-comment__date");
+            String formatStringDate = dateElements.get(0).text();
+            LocalDateTime commentsDateCreatedAt = convertCommentTime(formatStringDate);
+            if (commentsDateCreatedAt.isAfter(timeLastCommentIsSaved)) {
                 Comment comment = new Comment();
                 comment.setThreadId(thread.getThreadId());
-                comment.setCreatedAt(dateCreated);
-                String userName = elmCommentInfo.get(i).getElementsByClass("jsx-691990575 author-name").text();
+                comment.setCreatedAt(commentsDateCreatedAt);
+                String userName = commentElements.get(i).getElementsByClass("jsx-691990575 author-name").text();
                 comment.setUsername(userName);
-                String userRank = elmCommentInfo.get(i).getElementsByClass("jsx-691990575 author-rank").text();
+                String userRank = commentElements.get(i).getElementsByClass("jsx-691990575 author-rank").text();
                 comment.setUserRank(userRank);
-                Elements elmComments = elmCommentInfo.get(i).getElementsByClass("xf-body-paragraph");
-                String contentComment = elmComments.text();
+                Elements commentElement = commentElements.get(i).getElementsByClass("xf-body-paragraph");
+                String contentComment = commentElement.text();
                 StringTokenizer stringTokenizer = new StringTokenizer(contentComment);
-                long tokensLengthInComment = stringTokenizer.countTokens();
-                commentsTokensLength += tokensLengthInComment;
+                long commentTokenLength = stringTokenizer.countTokens();
+                commentsTokensLength += commentTokenLength;
                 comment.setComment(contentComment);
                 commentRepo.save(comment);
             }

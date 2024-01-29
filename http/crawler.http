@@ -1,9 +1,9 @@
 @urlBase=http://localhost:8081
 
-POST {{urlBase}}/api/v1/threads
+POST {{urlBase}}/api/v1/threads/crawl
 Content-Type: application/json
 
 {
-    "url": "https://tinhte.vn/thread/mxh-x-gio-co-gia-tri-chi-bang-30-so-tien-elon-musk-bo-ra-mua-lai.3753588/?ta_from_block=home_quick_news",
-    "source": "tinhte"
+    "url": "https://voz.vn/t/intel-cong-bo-vi-xu-ly-intel-core-the-he-14.904923/",
+    "source": "voz"
 }

@@ -7,7 +7,10 @@ import com.forum.repo.ThreadRepo;
 import com.forum.repo.ThreadSummaryRepo;
 import com.forum.service.summary.OpenAISummarize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 

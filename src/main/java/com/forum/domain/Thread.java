@@ -1,8 +1,7 @@
 package com.forum.domain;
 
-import org.checkerframework.common.aliasing.qual.Unique;
-
 import jakarta.persistence.*;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.time.LocalDateTime;
 

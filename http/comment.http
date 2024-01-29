@@ -3,9 +3,14 @@
 @url=https://www.otosaigon.com/threads/de-xuat-lam-duong-ven-song-noi-cu-chi-voi-can-gio.10012016/
 @page=1
 @pageSize=10
+@threadId=18
 
 ### getById
 GET {{urlBase}}/api/v1/threads/comments?url={{url}}&page={{page}}&pageSize={{pageSize}}
+Content-Type: application/json
+
+### getByThreadId
+GET {{urlBase}}/api/v1/threads/{{threadId}}/comments
 Content-Type: application/json
 
 

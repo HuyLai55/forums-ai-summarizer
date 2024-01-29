@@ -1,9 +1,9 @@
 package com.forum.service.crawler;
 
 import com.forum.domain.Comment;
+import com.forum.domain.Thread;
 import com.forum.domain.ThreadSummary;
 import com.forum.repo.CommentRepo;
-import com.forum.domain.Thread;
 import com.forum.repo.ThreadRepo;
 import com.forum.repo.ThreadSummaryRepo;
 import org.jsoup.Jsoup;
@@ -95,26 +95,26 @@ public class VozCrawler {
         document.select("br").before("\\n");
         document.select("p").before("\\n");
 
-        Elements elmCommentInfo = document.getElementsByClass("message message--post js-post js-inlineModContainer  ");
-        for (int i = 0; i < elmCommentInfo.size(); i++) {
-            Elements elmDates = elmCommentInfo.get(i).getElementsByClass("message-attribution-main listInline ")
+        Elements commentElements = document.getElementsByClass("message message--post js-post js-inlineModContainer  ");
+        for (int i = 0; i < commentElements.size(); i++) {
+            Elements dateElements = commentElements.get(i).getElementsByClass("message-attribution-main listInline ")
                     .select("li.u-concealed").select("a").select("time.u-dt");
-            String dateCreatedToString = elmDates.attr("datetime");
-            LocalDateTime dateCreated = convertStringToDateTime(dateCreatedToString);
-            if (dateCreated.isAfter(timeLastCommentIsSaved)) {
+            String dateCreatedToString = dateElements.attr("datetime");
+            LocalDateTime commentsDateCreatedAt = convertStringToDateTime(dateCreatedToString);
+            if (commentsDateCreatedAt.isAfter(timeLastCommentIsSaved)) {
                 Comment comment = new Comment();
                 comment.setThreadId(thread.getThreadId());
-                comment.setCreatedAt(dateCreated);
-                Elements elmUsers = elmCommentInfo.get(i).getElementsByClass("message-name");
+                comment.setCreatedAt(commentsDateCreatedAt);
+                Elements elmUsers = commentElements.get(i).getElementsByClass("message-name");
                 String userName = elmUsers.text();
                 comment.setUsername(userName);
-                String userRank = elmCommentInfo.get(i).getElementsByClass("userTitle message-userTitle").text();
+                String userRank = commentElements.get(i).getElementsByClass("userTitle message-userTitle").text();
                 comment.setUserRank(userRank);
-                Elements elmComments = elmCommentInfo.get(i).getElementsByClass("bbWrapper");
-                String contentComment = extractString(elmComments.text());
+                Elements commentElement = commentElements.get(i).getElementsByClass("bbWrapper");
+                String contentComment = extractString(commentElement.text());
                 StringTokenizer stringTokenizer = new StringTokenizer(contentComment);
-                Long tokensLengthInComment = (long) stringTokenizer.countTokens();
-                commentsTokensLength += tokensLengthInComment;
+                Long commentTokenLength = (long) stringTokenizer.countTokens();
+                commentsTokensLength += commentTokenLength;
                 comment.setComment(contentComment);
                 commentRepo.save(comment);
             }

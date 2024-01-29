@@ -1,9 +1,9 @@
 package com.forum.api.thread;
 
+import com.forum.domain.Thread;
 import com.forum.service.crawler.OtoSaigonCrawler;
 import com.forum.service.crawler.TinhTeCrawler;
 import com.forum.service.crawler.VozCrawler;
-import com.forum.domain.Thread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

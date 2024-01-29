@@ -2,8 +2,8 @@
 package com.forum.api.comment;
 
 import com.forum.domain.Comment;
-import com.forum.repo.CommentRepo;
 import com.forum.domain.Thread;
+import com.forum.repo.CommentRepo;
 import com.forum.repo.ThreadRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

@@ -1,13 +1,12 @@
 @urlBase=http://localhost:8081
 
-@url=https://voz.vn/t/netflix-4k-nhung.911822/
+@url=https://voz.vn/t/intel-cong-bo-vi-xu-ly-intel-core-the-he-14.904923/
 
 // get thread
 GET {{urlBase}}/api/v1/threads?url={{url}}
 Content-Type: application/json
 
-###
-// get summary
+### get summary
 POST  {{urlBase}}/api/v1/threads/summary?url={{url}}
 Content-Type: application/json
 
