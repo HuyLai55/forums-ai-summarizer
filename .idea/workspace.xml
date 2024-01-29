@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0dc179a0-6d30-4e8a-85ce-8cc1ee92006e" name="Changes" comment="crawl comment in voz forum and fix save data">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/comment.http" beforeDir="false" afterPath="$PROJECT_DIR$/http/comment.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/crawler.http" beforeDir="false" afterPath="$PROJECT_DIR$/http/crawler.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/http/thread.http" beforeDir="false" afterPath="$PROJECT_DIR$/http/thread.http" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/service/crawler/OtoSaigonCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/service/crawler/OtoSaigonCrawler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/forum/service/crawler/TinhTeCrawler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/forum/service/crawler/TinhTeCrawler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -255,7 +251,7 @@
       <workItem from="1706324347132" duration="5306000" />
       <workItem from="1706329878135" duration="609000" />
       <workItem from="1706336868855" duration="364000" />
-      <workItem from="1706512076799" duration="2714000" />
+      <workItem from="1706512076799" duration="8506000" />
     </task>
     <task id="LOCAL-00001" summary="config for sqlite">
       <created>1703430016954</created>
